@@ -1,1 +1,1 @@
-# java_class_projects
+# java-class-projects
