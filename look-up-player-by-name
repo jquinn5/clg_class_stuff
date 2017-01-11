@@ -1,0 +1,128 @@
+Look-up-Player-by-name
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Main {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner kb = new Scanner(System.in);
+
+// Variable for user's command
+        String command;
+// Create and load the Players object from the input file
+        Players p = new Players();
+        p.load("players.txt");
+// Ask for and process user commands
+        do {
+            // Prompt for command
+            System.out.println("Enter id, name, or quit");
+            command = kb.nextLine();
+            // Process command
+            if (command.equals("id")) {
+                // get id from user
+                System.out.println("Enter the ID:");
+                String id = kb.nextLine();
+                String playerName = p.getPlayerByID(id);
+                if (playerName != null) {
+                    System.out.println("Player: " + playerName);
+                } else {
+                    System.out.println("Player id not found");
+                }
+            } else if (command.equals("name")) {
+                System.out.println("Enter player's last name:");
+                String userLastName = kb.nextLine();
+                p.printIdsByName(userLastName);
+            } else if (command.equals("quit")) {
+                System.out.println("Program ending.");
+            } else {
+                System.out.println("I don't understand your command");
+            }
+        } while (!command.equals("quit"));
+    }
+}
+
+// Player-class
+
+public class Player {
+    private String lastName;
+    private String firstName;
+    
+    public Player(String f, String l){
+        firstName = f;
+        lastName = l;
+    }
+
+    public String getLastName(){
+        return lastName;
+    }
+    public String toString(){
+        return lastName + ", " + firstName;
+    }
+}
+
+//Players-class
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Players {
+
+    private ArrayList<Player> list;
+    private ArrayList<String> ids;
+
+    public Players() {
+        ids = new ArrayList<>();
+        list = new ArrayList<>();
+    }
+
+    public void load(String fn) throws FileNotFoundException {
+        File f = new File(fn);
+        Scanner sc = new Scanner(f);
+        int i = 0;
+        while (sc.hasNextLine()) {
+            // Create a Scanner from the input line
+            Scanner lineScanner = new Scanner(sc.nextLine());
+            // Change the delimiter to a comma
+            lineScanner.useDelimiter(",");
+            // Add this ID
+            ids.add(i, lineScanner.next());
+            // Create a Player from the remaining tokens
+            Player p = new Player(lineScanner.next(),
+                    lineScanner.next());
+            list.add(i, p);
+            i++;    
+        }
+ 
+    }
+    public String getPlayerByID(String id) {
+        int index = ids.indexOf(id);
+        if (index > -1) {
+            // Player was found
+            return list.get(index).toString();
+        } else {
+            // Player was not found
+            return null;
+        }
+    }
+
+    public void printIdsByName(String l) {
+        // Print all ids whose last name matches parameter
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getLastName().equals(l)) {
+// Name match on this index
+                System.out.println(ids.get(i) + ": " + list.get(i));
+            }
+        }
+    }
+
+    private Player fn() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}
+
