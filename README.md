@@ -1,1 +1,1 @@
-# clg_class_stuff
+# java_class_projects
